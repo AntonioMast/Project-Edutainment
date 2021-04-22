@@ -11,11 +11,15 @@ class rockmicro extends Phaser.Scene {
 
     //variable declarations & game-object creations
     create(){
+        //this function handles what should happen when the game ends
         this.finishGame();
+
+        //sets the background image
         this.menu = this.add.image(0,0,'MENU2').setOrigin(0);
         this.menu.setScale(0.67);
         this.menu.setDepth(2);
 
+        //creates the checkmark and Xmark object off-screen
         this.checkMark = this.add.image(875,340,'CHECKMARK');
         this.checkMark.setDepth(1);
         this.checkMark.setScale(0.6);
@@ -26,25 +30,19 @@ class rockmicro extends Phaser.Scene {
         // sets the rock shown to a random rock from the spritesheet
         var currentAnim = "rockAnim"+(new Date()).toString(); //Creates a new 'animation' for each rock based off of the current time when the game loads
         rockNum = Phaser.Math.Between(0, 26); // randomly generates the rock choosen on game load
-
-        lastSolution = this.returnRock(rockNum);
-
         var rock = {
             key: currentAnim,
             frames: this.anims.generateFrameNumbers('ROCKS', { start: rockNum, end: rockNum  }),
             frameRate: 1,
         };
-
         this.anims.create(rock);
         this.currentrock = this.add.sprite(this.game.renderer.width/2, 250, 'ROCKS').setOrigin(0.5);
         this.currentrock.play(currentAnim);
         this.currentrock.setScale(0.8);
         this.currentrock.setDepth(4);
 
-        // ***********************************************************
-        // ***********************************************************
-        // ***********************************************************
-        // testing
+        //sets the solution to the correct solution -- this gets shown on the score scene if the game is failed 
+        lastSolution = this.returnRock(rockNum);
 
         //variables
         this.guessPlaced = -1;
@@ -55,10 +53,10 @@ class rockmicro extends Phaser.Scene {
         var rockText3;
         this.correcty;
 
-         //play music
-         this.menumusic7 = this.sound.add("MUSIC7", volumeVariable);
-         this.menumusic7.volume = volumeVariable;
-         this.menumusic7.play();
+        //play music
+        this.menumusic7 = this.sound.add("MUSIC7", volumeVariable);
+        this.menumusic7.volume = volumeVariable;
+        this.menumusic7.play();
 
         //sets the text for each choice
         switch(this.correctRock) {
@@ -137,6 +135,7 @@ class rockmicro extends Phaser.Scene {
     
     }
 
+    //this function handles what happens once the user has guessed
     checkWinState(guessNum){
 
         if (this.guessPlaced == -1) {
@@ -179,36 +178,29 @@ class rockmicro extends Phaser.Scene {
         }
     }
     
+    //this function takes in a number and it return a string for a rock name according to the number given
     returnRock(rockID){
-
         let rocksArray = ['Igneous - Andesite', 'Igneous - Basalt', 'Igneous - Dacite', 'Igneous - Diabase', 'Igneous - Gabbro', 'Igneous - Granite', 'Igneous - Obsidian', 'Igneous - Pegmatite',
                            'Igneous - Diorite', 'Metamorphic - Mariposite', 'Metamorphic - Anthracite', 'Metamorphic - Gneiss', 'Metamorphic - Lapis Lazuli', 'Metamorphic - Marble', 'Metamorphic - Quartzite', 'Metamorphic - Novaculite',
                            'Metamorphic - Slate', 'Metamorphic - Soapstone', 'Sedimentary - Breccia', 'Sedimentary - Coal', 'Sedimentary - Coquina', 'Sedimentary - Flint', 'Sedimentary - Limestone', 'Sedimentary - Chalk',
                            'Sedimentary - Sandstone', 'Sedimentary - Shale', 'Sedimentary - Siltstone', ];
-
-
         return rocksArray[rockID];
-        
     }
 
+    //this function handles what should happen when the game ends
     finishGame(){
-
         setTimeout(() => { //changes to a intermission/new scene after 7.5 seconds
-
             this.menumusic7.stop();
-
             if (this.guessPlaced != this.correctRock)
             {
                 this.scene.start("scorescene");
             }
-
             else
             {
                 score += 1;
                 rockscore += 1;
                 this.scene.start("intermission");
             }
-
         }, (time * 1000));
     }
 
@@ -227,17 +219,19 @@ class rockmicro extends Phaser.Scene {
             this.checkWinState(3);
         }   
 
+        //handles the math for the loading bar
         var nowtime = new Date();
         var deltaTime = (nowtime-this.oldtime)/(time * 1112);
         this.oldtime = nowtime;
         num += deltaTime;
         this.loadingBar.fillRect(0, this.game.renderer.height / 1.3, this.game.renderer.width * num, 20);
 
+        //helps place the checkmark if the user guessed
         if (this.guessPlaced > 0){
             this.checkMark.setDepth(3);
         }
     }
 }
 
-//global variables
+//script-global variables
 var rockNum;

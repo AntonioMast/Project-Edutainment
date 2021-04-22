@@ -1,4 +1,4 @@
-//The point of this script is to allow the player to start the game and change settings from a menu
+//The point of this script is to welcome the player and to allow them to start the game and change settings from a menu
 class mainmenu extends Phaser.Scene {
     constructor() {
             super({key:"mainmenu"});
@@ -75,13 +75,13 @@ class mainmenu extends Phaser.Scene {
 
         playButton.setDepth(2);
 
-        /*BUTTON RENDERING*/
+        //BUTTON RENDERING
         this.button1 = this.add.graphics({
             fillStyle: {
                 color: 0x000000 //black
             }
         })
-
+        this.fullOpacity = true;
         this.buttonAlpha = 0.8;
 
         this.button1.setDepth(1);
@@ -94,25 +94,26 @@ class mainmenu extends Phaser.Scene {
         //sets button to position
         this.button1.fillRect(0, 0, 145, 75 );
 
-        //play music
+        //plays music
         menumusic1 = this.sound.add('MUSIC1');
         menumusic1.volume = volumeVariable;
         menumusic1.play();
         menumusic1.setLoop(true);
 
-        this.fullOpacity = true;
-
+        //(re)sets score
         score = 0;
     }
     
     //updates once per frame
     update(delta){
 
+        //lets the user press space or enter in order to advance
         let keyboard = this.input.keyboard;
         if (keyboard.checkDown(keyboard.addKey('ENTER')) || keyboard.checkDown(keyboard.addKey('SPACE'))){
             this.scene.start("selectscreen");
         }
 
+        //moves the dino character across the screen
         this.dinoCharacter.x = this.dinoCharacter.x+1;
         this.textBubble.x = this.textBubble.x+1;
         this.dinoText.x = this.dinoText.x+1;
@@ -123,6 +124,7 @@ class mainmenu extends Phaser.Scene {
             this.dinoText.x = -270;
         }
         
+        //makes the button flash
         if (this.fullOpacity == true)
             {
                 this.buttonAlpha -= 0.005;
@@ -130,20 +132,12 @@ class mainmenu extends Phaser.Scene {
                 if (this.buttonAlpha <= 0.4)
                     this.fullOpacity = false;
             }
-
         else {
             this.buttonAlpha += 0.005;
 
             if (this.buttonAlpha >= 0.8)
                 this.fullOpacity = true;
         }
-
         this.button1.setAlpha(this.buttonAlpha);
     }
 }
-
-var menumusic1;
-var includeMath = true;
-var includeGeography = true;
-var includeTyping = true;
-var includeGeology = true;

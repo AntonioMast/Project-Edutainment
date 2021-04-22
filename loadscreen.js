@@ -13,7 +13,7 @@ class loadscreen extends Phaser.Scene {
         var loadingText;
         loadingText = this.add.text(this.game.renderer.width / 2.6, this.game.renderer.height/3, 'Loading...', { fontSize: '64px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#FFF3ED' });
 
-        //loads assets into ram
+        //preloads all art and sound assets
         this.load.image("MENU",'./assets/TitleScreen.png');
         this.load.image("MENU2",'./assets/ChalkBoard.png');
         this.load.image("TEXTBUBBLE",'./assets/textBubble.png');
@@ -54,8 +54,5 @@ class loadscreen extends Phaser.Scene {
         this.load.on("complete", () => {
             this.scene.start("mainmenu");
         });
-        
     }
-
-
 }

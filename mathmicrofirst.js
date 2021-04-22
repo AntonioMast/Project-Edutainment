@@ -1,4 +1,4 @@
-//The point of this script is to create a scene that lets users play a math game
+//The point of this script is to create a scene that lets users play an algebra game
 class mathmicrofirst extends Phaser.Scene {
     constructor() {
             super({key:"mathmicrofirst"});
@@ -11,16 +11,18 @@ class mathmicrofirst extends Phaser.Scene {
 
     //variable declarations & game-object creations
     create(){
+        //this function handles what should happen when the game ends
         this.finishGame();
-        input = "";
-        this.menu = this.add.image(0,0,'MENU2').setOrigin(0);
-        this.menu.setScale(0.67);
-        this.menu.setDepth(2);
 
+        //creates the checkmark object off-screen
         this.checkMark = this.add.image(850,340,'CHECKMARK');
         this.checkMark.setDepth(1);
 
         //variables
+        input = "";
+        this.menu = this.add.image(0,0,'MENU2').setOrigin(0);
+        this.menu.setScale(0.67);
+        this.menu.setDepth(2);
         this.randomOperator = Phaser.Math.Between(0, 1);
         this.haveWon = false;
         this.oldtime = new Date();
@@ -28,19 +30,19 @@ class mathmicrofirst extends Phaser.Scene {
         this.secondNum;
         this.solution;
 
+        //makes the solution which is the user's input is checked against
         if (this.randomOperator == 0) {
             this.firstNum = Phaser.Math.Between(0, 39);
             this.secondNum = Phaser.Math.Between(0, 39);
             this.solution = (this.firstNum + this.secondNum).toString();
         }
-
         else if (this.randomOperator == 1) {
             this.firstNum = Phaser.Math.Between(3, 32);
             this.secondNum = Phaser.Math.Between(0, this.firstNum);
             this.solution = (this.firstNum - this.secondNum).toString();
         }
 
-        //play music
+        //plays music
         this.menumusic3 = this.sound.add("MUSIC3", volumeVariable);
         this.menumusic3.volume = volumeVariable;
         this.menumusic3.play();
@@ -67,20 +69,19 @@ class mathmicrofirst extends Phaser.Scene {
         //question text
         this.questionText;
 
+        //creates the display text for the problem given to the user
         if (this.randomOperator == 0) {
             this.questionText = this.add.text(this.game.renderer.width/2, 350, this.firstNum.toString() + " + " + this.secondNum.toString() + " = " + input, { fontSize: '64px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#E0DBD1' }).setOrigin(0.5);
             this.questionText.setDepth(3);
         }
-
         else if (this.randomOperator == 1) {
             this.questionText = this.add.text(this.game.renderer.width/2, 350, this.firstNum.toString() + " - " + this.secondNum.toString() + " = " + input, { fontSize: '64px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#E0DBD1' }).setOrigin(0.5);
             this.questionText.setDepth(3);
         }
-
         lastSolution = this.solution;
-    
     }
 
+    //this function handles what should happen when the game ends
     finishGame(){
 
         setTimeout(() => { //changes to a intermission/new scene after time runs out
@@ -127,22 +128,24 @@ class mathmicrofirst extends Phaser.Scene {
             }
         }
 
+        //updates the text on the screen according to the user's input
         if (this.randomOperator == 0) {
             this.questionText.text = this.firstNum.toString() + " + " + this.secondNum.toString() + " = " + input;
             this.questionText.setOrigin(0.5);
         }
-
         else if (this.randomOperator == 1) {
             this.questionText.text = this.firstNum.toString() + " - " + this.secondNum.toString() + " = " + input;
             this.questionText.setOrigin(0.5);
         }
 
+        //handles the math for the loading bar
         var nowtime = new Date();
         var deltaTime = (nowtime-this.oldtime)/(time * 1112);
         this.oldtime = nowtime;
         num += deltaTime;
         this.loadingBar.fillRect(0, this.game.renderer.height / 1.3, this.game.renderer.width * num, 20);
 
+        //sets the game state to won if the user's input is equal to the solution
         if (this.solution == input){
             this.haveWon = true;
             this.checkMark.setDepth(3);
@@ -150,5 +153,5 @@ class mathmicrofirst extends Phaser.Scene {
     }
 }
 
-//global variables
+//script-global variables
 var input;

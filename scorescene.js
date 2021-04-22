@@ -5,6 +5,7 @@ class scorescene extends Phaser.Scene {
     }
 
     preload() {
+        //sets background to very light gray
         this.cameras.main.setBackgroundColor('#EEEEEE')
     }
 
@@ -19,11 +20,13 @@ class scorescene extends Phaser.Scene {
             repeat: -1
         }
 
+        //plays the music
         this.menumusic4 = this.sound.add("MUSIC4", volumeVariable);
         this.menumusic4.volume = volumeVariable;
         this.menumusic4.play();
         this.menumusic4.setLoop(true);
 
+        //creates the dino game object
         this.anims.create(dino1);
         this.dinoCharacter = this.add.sprite(90, this.game.renderer.height-36, 'DINO').play('dinoStand');
         this.dinoCharacter.setScale(1.0);
@@ -40,6 +43,7 @@ class scorescene extends Phaser.Scene {
         if (score > 4) { this.add.text(this.game.renderer.width / 2, this.game.renderer.height / 2.05, 'Good Job!', { fontSize: '64px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#222222' }).setOrigin(0.5); }
         else { this.add.text(this.game.renderer.width / 2, this.game.renderer.height / 2.05, 'Nice Try!', { fontSize: '64px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#222222' }).setOrigin(0.5);}
         
+        //creates the return button
         const playButton = this.add.text(this.game.renderer.width / 2, 500, 'Return', { fontSize: '64px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#FFFFFF' }).setOrigin(0.5);
         playButton.setInteractive().on('pointerdown', () => {
             this.menumusic4.stop();
@@ -47,7 +51,7 @@ class scorescene extends Phaser.Scene {
             this.scene.start("mainmenu");
         } );
 
-        //adds text to tell the player their best subject after so many rounds
+        //adds text to tell the player their best subject after so many rounds have been played
         if (mathscore > 9 && mathscore > geographyscore + 4 && mathscore > typingscore + 4 && mathscore > rockscore + 4) {
             this.add.text(this.game.renderer.width / 2, this.game.renderer.height - 15, 'You\'ve made a lot of progress in Algrebra. You should try the other subjects next time.', { fontSize: '24px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#AAAAAA' }).setOrigin(0.5);
         }
@@ -61,16 +65,11 @@ class scorescene extends Phaser.Scene {
             this.add.text(this.game.renderer.width / 2, this.game.renderer.height - 15, 'You\'ve made a lot of progress in Geology. You should try the other subjects next time.', { fontSize: '24px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#AAAAAA' }).setOrigin(0.5);
         }
         this.add.text(40, 300, 'Progress\nAlgebra: ' + mathscore + '\nGeography: ' + geographyscore + '\nTyping: ' + typingscore + '\nGeology: ' + rockscore, { fontSize: '32px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#AAAAAA' });
-        
 
-        let keyboard = this.input.keyboard;
-        if (keyboard.checkDown(keyboard.addKey('ENTER'))){
-            this.menumusic4.stop();
-            this.scene.start("mainmenu");
-        }
-
+        //handles rendering of the return button
         playButton.setDepth(2);
 
+        //creates a text bubble
         this.textBubble = this.add.image(135, this.game.renderer.height-175,'TEXTBUBBLE').setOrigin(0);
         this.textBubble.setScale(0.5);
         this.dinoText = this.add.text(172, this.game.renderer.height-150, ' Why not\ntry again?', { fontSize: '20px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#FFFFFF' });
@@ -81,7 +80,6 @@ class scorescene extends Phaser.Scene {
                 color: 0x000000 //black
             }
         })
-
         this.buttonAlpha = 0.8;
         this.button1.setDepth(1);
         this.button1.setAlpha(this.buttonAlpha);
@@ -97,13 +95,14 @@ class scorescene extends Phaser.Scene {
 
         //updates once per frame
         update(delta){
-
+            //lets the user advance using the keyboard
             let keyboard = this.input.keyboard;
             if (keyboard.checkDown(keyboard.addKey('ENTER')) || keyboard.checkDown(keyboard.addKey('SPACE'))){
                 this.menumusic4.stop();
-                this.scene.start("intermission");
+                this.scene.start("mainmenu");
             }
-            
+
+            //makes the button flash
             if (this.fullOpacity == true)
                 {
                     this.buttonAlpha -= 0.005;
@@ -111,16 +110,12 @@ class scorescene extends Phaser.Scene {
                     if (this.buttonAlpha <= 0.4)
                         this.fullOpacity = false;
                 }
-    
             else {
                 this.buttonAlpha += 0.005;
     
                 if (this.buttonAlpha >= 0.8)
                     this.fullOpacity = true;
             }
-    
             this.button1.setAlpha(this.buttonAlpha);
         }
-
-
 }

@@ -11,11 +11,15 @@ class geomicrofirst extends Phaser.Scene {
 
     //variable declarations & game-object creations
     create(){
+        //this function handles what should happen when the game ends
         this.finishGame();
+
+        //sets the background image
         this.menu = this.add.image(0,0,'MENU2').setOrigin(0);
         this.menu.setScale(0.67);
         this.menu.setDepth(2);
 
+        //creates the checkmark and Xmark object off-screen
         this.checkMark = this.add.image(775,340,'CHECKMARK');
         this.checkMark.setDepth(1);
         this.checkMark.setScale(0.6);
@@ -27,23 +31,16 @@ class geomicrofirst extends Phaser.Scene {
         var currentAnim = "stateAnim"+(new Date()).toString(); //Creates a new 'animation' for each state based off of the current time when the game loads
         stateNum = Phaser.Math.Between(0, 49); // randomly generates the state on game load
         lastSolution = this.returnState(stateNum);
-
         var state = {
             key: currentAnim,
             frames: this.anims.generateFrameNumbers('STATES', { start: stateNum, end: stateNum  }),
             frameRate: 1,
         };
-
         this.anims.create(state);
         this.currentState = this.add.sprite(this.game.renderer.width/2, 250, 'STATES').setOrigin(0.5);
         this.currentState.play(currentAnim);
         this.currentState.setScale(1);
         this.currentState.setDepth(4);
-
-        // ***********************************************************
-        // ***********************************************************
-        // ***********************************************************
-        // testing
 
         //variables
         this.guessPlaced = -1;
@@ -122,7 +119,6 @@ class geomicrofirst extends Phaser.Scene {
         /****************************************************/
         /* The Following Code Is Used for Rendering Objects */
         /****************************************************/
-
         //creates a rectangle to represent a loading bar
         this.loadingBar = this.add.graphics({
             fillStyle: {
@@ -161,13 +157,11 @@ class geomicrofirst extends Phaser.Scene {
         this.question4Text.setInteractive().on('pointerdown', () => {
             this.checkWinState(4);
         } );
-    
     }
 
+    //this script handles all actions needed once the user selects an options
     checkWinState(guessNum){
-
         if (this.guessPlaced == -1) {
-
             switch(guessNum) {
                 case 1:
                     this.guessPlaced = 1;
@@ -213,13 +207,12 @@ class geomicrofirst extends Phaser.Scene {
                         this.checkMark.y = this.correcty;
                     }
                 break;
-
             }
         }
     }
     
+    //this function takes in a number and it return a string for a state according to the number given
     returnState(stateID){
-
         let statesArray = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',
                            'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',
                            'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
@@ -227,36 +220,28 @@ class geomicrofirst extends Phaser.Scene {
                            'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina',
                            'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia',
                                                                 'Wisconsin', 'Wyoming' ];
-
-
         return statesArray[stateID];
-        
     }
 
+    //this function handles what should happen when the game ends
     finishGame(){
-
         setTimeout(() => { //changes to a intermission/new scene after 7.5 seconds
-
             this.menumusic6.stop();
-
             if (this.guessPlaced != this.correctState)
             {
                 this.scene.start("scorescene");
             }
-
             else
             {
                 score += 1;
                 geographyscore += 1;
                 this.scene.start("intermission"); 
             }
-
         }, (time * 1000));
     }
 
     //updates once per frame
     update(delta){
-
         //gets user keyboard input
         let keyboard = this.input.keyboard;
         if (keyboard.checkDown(keyboard.addKey('ONE')) || keyboard.checkDown(keyboard.addKey('NUMPAD_ONE')) || keyboard.checkDown(keyboard.addKey(35))) {
@@ -271,19 +256,20 @@ class geomicrofirst extends Phaser.Scene {
         if (keyboard.checkDown(keyboard.addKey('FOUR')) || keyboard.checkDown(keyboard.addKey('NUMPAD_FOUR')) || keyboard.checkDown(keyboard.addKey(37))) {
             this.checkWinState(4);
         }
-           
 
+        //handles the math for the loading bar
         var nowtime = new Date();
         var deltaTime = (nowtime-this.oldtime)/(time * 1112);
         this.oldtime = nowtime;
         num += deltaTime;
         this.loadingBar.fillRect(0, this.game.renderer.height / 1.3, this.game.renderer.width * num, 20);
 
+        //helps place the checkmark if the user guessed
         if (this.guessPlaced > 0){
             this.checkMark.setDepth(3);
         }
     }
 }
 
-//global variables
+//script-global variables
 var stateNum;

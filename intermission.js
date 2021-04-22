@@ -18,14 +18,15 @@ class intermission extends Phaser.Scene {
         this.winJingle = this.sound.add("JINGLE");
         this.winJingle.volume = volumeVariable;
         this.winJingle.play();
+
+        //handles picking and going to a different scene
         this.gotoMicroGame();
 
-        //sets the timer to a lower value every 5 rounds
+        //sets the timer to a lower value every 5 rounds. it's last value is 2.5 seconds per micro game
         if (score > 1 && score % 2 == 0 && score < 31) {
             time -= 0.5;
         }
         
-
         //sets dino standing animation from the loaded spritesheet
         var dino1 = {
             key: 'dinoStand',
@@ -33,14 +34,14 @@ class intermission extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         };
-
+        //sets dino walking animation from the loaded spritesheet
         var dino2 = {
             key: 'dinoWalk',
             frames: this.anims.generateFrameNumbers('DINO', { start: 4, end: 9}),
             frameRate: 10,
             repeat: -1
         };
-
+        //sets dino running animation from the loaded spritesheet
         var dino3 = {
             key: 'dinoRun',
             frames: this.anims.generateFrameNumbers('DINO', { start: 18, end: 23}),
@@ -48,9 +49,10 @@ class intermission extends Phaser.Scene {
             repeat: -1
         };
 
+        //randomly picks an animation for the dino to use
         this.dinoRandomizer = Phaser.Math.Between(1, 2);
 
-        //creates dino character in scene with a random animation
+        //creates dino character in scene with the random animation
         switch(this.dinoRandomizer) {
             case 0:
                 this.anims.create(dino1);
@@ -92,38 +94,58 @@ class intermission extends Phaser.Scene {
         /****************************************************/
         /* The Following Code Is Used for Rendering Objects */
         /****************************************************/
-        
         //creates a rectangle to represent a loading bar
         this.loadingBar = this.add.graphics({
             fillStyle: {
                 color: "0x"+(Math.random()*0xFFFFFF<<0).toString(16) //random color
             }
         })
-
-        //repositions loading bar
+        //repositions loading bar to middle of the screen
         this.loadingBar.x += this.game.renderer.width * 0.05;
-
     }
 
+    //this function handles picking and going to a different scene
     gotoMicroGame(){
 
         setTimeout(() => { //changes to a micro game/new scene after 3 seconds
-            var randomGame;
+            var randomGame = lastGame;
             var canPlayGame = false;
-            do {
-                randomGame = Phaser.Math.Between(1, 4);
-                switch(randomGame) {
-                    case 1: if (includeMath == true) {canPlayGame = true} break;
-                    case 2: if (includeGeography == true) {canPlayGame = true} break;
-                    case 3: if (includeTyping == true) {canPlayGame = true} break;
-                    case 4: if (includeGeology == true) {canPlayGame = true} break;
-                    default: canPlayGame = false; break;
-                }
-            } while (canPlayGame == false);
             
+            //makes it so that you never get the same game twice in a row if you have more than a single game selected
+            if (numSelected > 1){
+                while (lastGame == randomGame || canPlayGame == false) {
+                    canPlayGame = false;
+                    randomGame = Phaser.Math.Between(1, 4);
+                    switch(randomGame) {
+                        case 1: if (includeMath == true) {canPlayGame = true} break;
+                        case 2: if (includeGeography == true) {canPlayGame = true} break;
+                        case 3: if (includeTyping == true) {canPlayGame = true} break;
+                        case 4: if (includeGeology == true) {canPlayGame = true} break;
+                        default: canPlayGame = false; break;
+                    }
+                }
+            }
+
+            //handles setting the game if only a single game it selected
+            if (numSelected == 1) {
+                canPlayGame = false;
+                do {
+                    randomGame = Phaser.Math.Between(1, 4);
+                    switch(randomGame) {
+                        case 1: if (includeMath == true) {canPlayGame = true} break;
+                        case 2: if (includeGeography == true) {canPlayGame = true} break;
+                        case 3: if (includeTyping == true) {canPlayGame = true} break;
+                        case 4: if (includeGeology == true) {canPlayGame = true} break;
+                        default: canPlayGame = false; break;
+                    }
+                } while (canPlayGame == false);
+            }
+
+            lastGame = randomGame;
             this.menumusic2.stop(); //stops the music
             num = 0.0;
 
+            //does the actual activity of switching the scene
             switch(randomGame) {
                 case 1:
                     this.scene.start("mathmicrofirst");// changes scene to a math addition/subtraction game
@@ -138,45 +160,43 @@ class intermission extends Phaser.Scene {
                     this.scene.start("rockmicro");// changes scene to a image-based geography game
                 break;
                 default:
-                    this.scene.start("testmicro");// this shouldn't ever run under normal circumstances
+                    this.scene.start("mathmicrofirst");// this shouldn't ever run under normal circumstances
             }
         }, 3000);
     }
 
     //updates once per frame
     update(delta){
+        //fills the loading bar
         var nowtime = new Date();
         var deltaTime = (nowtime-this.oldtime)/(100000/30);
         this.oldtime = nowtime;
         num += deltaTime;
         this.loadingBar.fillRect(0, this.game.renderer.height / 1.3, this.game.renderer.width * num, 20);
 
+        //makes the text blink
         if (this.fullOpacity == true)
         {
             this.textAlpha -= 0.005;
-
             if (this.textAlpha <= 0.2)
                 this.fullOpacity = false;
         }
-
         else {
             this.textAlpha += 0.005;
-
             if (this.textAlpha >= 0.5)
                 this.fullOpacity = true;
         }
-
         this.alertText.setAlpha(this.textAlpha);
 
         //moves the dino character depends on the animation
         if (this.dinoRandomizer == 1) {
             this.dinoCharacter.x = this.dinoCharacter.x+1
         }
-
         else if (this.dinoRandomizer == 2) {
             this.dinoCharacter.x = this.dinoCharacter.x+2
         }
     }
 }
 
+//script-global variables
 var num = 0.0;
