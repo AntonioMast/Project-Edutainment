@@ -9,3 +9,6 @@ Please note that all art and sound assets are NOT distrubted here due to liscens
 
 If you would like to run this project on a local machine, you will need a web server to play. I recommend the Mongoose Embedded Web Server. You can find it here https://github.com/cesanta/mongoose
 Additionally, don't forget to place your art and sound assets in the assets folder, otherwise the art and sound will be broken.
+
+
+Copyright 2021, Antonio Mastroianni, All rights reserved.
