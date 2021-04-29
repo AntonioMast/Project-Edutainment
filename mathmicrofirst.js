@@ -1,4 +1,4 @@
-//The point of this script is to create a scene that lets users play an algebra game
+//The point of this script is to create a scene that lets users play an arithmetic game
 class mathmicrofirst extends Phaser.Scene {
     constructor() {
             super({key:"mathmicrofirst"});

@@ -33,7 +33,7 @@ class selectscreen extends Phaser.Scene {
         this.click.volume = volumeVariable;
 
         //creates each of the selectable menu options
-        var mathButton = this.add.text(this.game.renderer.width / 2, this.game.renderer.height / 2 - 120, 'Algebra', { fontSize: '50px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#86D98A' }).setOrigin(0.5).setDepth(2);
+        var mathButton = this.add.text(this.game.renderer.width / 2, this.game.renderer.height / 2 - 120, 'Arithmetic', { fontSize: '50px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#86D98A' }).setOrigin(0.5).setDepth(2);
         if (includeMath == false) {mathButton.setColor('#FF696C')}
         mathButton.setInteractive().on('pointerdown', () => {
             if (includeMath == true && (includeTyping == true || includeGeography == true || includeGeology == true)) {mathButton.setColor('#FF696C'); includeMath = false; this.click.play(); numSelected -= 1;}

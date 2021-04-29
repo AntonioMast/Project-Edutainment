@@ -64,7 +64,7 @@ class scorescene extends Phaser.Scene {
         else if (rockscore > 9 && rockscore > geographyscore + 4 && rockscore > typingscore + 4 && rockscore > mathscore + 4) {
             this.add.text(this.game.renderer.width / 2, this.game.renderer.height - 15, 'You\'ve made a lot of progress in Geology. You should try the other subjects next time.', { fontSize: '24px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#AAAAAA' }).setOrigin(0.5);
         }
-        this.add.text(40, 300, 'Progress\nAlgebra: ' + mathscore + '\nGeography: ' + geographyscore + '\nTyping: ' + typingscore + '\nGeology: ' + rockscore, { fontSize: '32px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#AAAAAA' });
+        this.add.text(40, 300, 'Progress\nArithmetic: ' + mathscore + '\nGeography: ' + geographyscore + '\nTyping: ' + typingscore + '\nGeology: ' + rockscore, { fontSize: '32px', fontFamily: 'Futura,Trebuchet MS,Arial,sans-serif', fill: '#AAAAAA' });
 
         //handles rendering of the return button
         playButton.setDepth(2);
